@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {catchError, retry} from 'rxjs/operators';
 import {Observable, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
+import {Linkedin} from '../models/linkedin';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,13 @@ export class LinkedinService {
 
   getInfoLinkedin(userId: number): Observable<any> {
     return this.http.get(environment.api_linkedin + 'infoAccess/' + userId).pipe(
+      retry(1),
+      catchError(this.handleError)
+    );
+  }
+
+  sharePost(linkedin: Linkedin): Observable<any> {
+    return this.http.post(environment.api_linkedin + 'sharePost', {linkedin}).pipe(
       retry(1),
       catchError(this.handleError)
     );

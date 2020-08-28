@@ -4,5 +4,4 @@ export class Linkedin {
   authCode: string;
   authToken: string;
   linkedinID: string;
-  token: string;
 }

@@ -11,9 +11,8 @@ import {Linkedin} from '../../models/linkedin';
 })
 export class LoginComponent implements OnInit {
 
-
-  token: string;
   linkedin: Linkedin;
+  msg: '';
 
   constructor(private linkedinService: LinkedinService, private route: ActivatedRoute) {
   }
@@ -29,7 +28,6 @@ export class LoginComponent implements OnInit {
           authCode: '',
           authToken: '',
           linkedinID: '',
-          token: ''
         };
         this.getInfoAccess();
       }
@@ -42,22 +40,23 @@ export class LoginComponent implements OnInit {
 
   getAuth(code: string): void {
     this.linkedinService.getAuth(1, code).subscribe((data) => {
-      this.linkedin.token = data.linkedin.token;
+      this.linkedin.authToken = data.linkedin.auth_token;
     });
   }
 
   postJob(): void {
-    console.log(1);
+    this.linkedinService.sharePost(this.linkedin).subscribe((data) => {
+      this.msg = data;
+    });
   }
 
   private getInfoAccess(): void {
     this.linkedinService.getInfoLinkedin(1).subscribe(data => {
-      this.linkedin.id = data.id;
-      console.log(data);
-      this.linkedin.userId = data.user_id;
-      this.linkedin.authCode = data.auth_code;
-      this.linkedin.authToken = data.auth_token;
-      this.linkedin.linkedinID = data.linkedin_id;
+      this.linkedin.id = data.linkedin.id;
+      this.linkedin.userId = data.linkedin.user_id;
+      this.linkedin.authCode = data.linkedin.auth_code;
+      this.linkedin.authToken = data.linkedin.auth_token;
+      this.linkedin.linkedinID = data.linkedin.linkedin_id;
     });
   }
 

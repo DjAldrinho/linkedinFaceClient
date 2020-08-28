@@ -1,5 +1,8 @@
 <h2>Linkedin</h2>
 <div>
-  <a [href]="getUrlCode()" *ngIf="!linkedin">Login Linkedin</a>
-  <button (click)="postJob()" *ngIf="linkedin">Share Post</button>
+  <a [href]="getUrlCode()" *ngIf="linkedin.id === null">Login Linkedin</a>
+  <div *ngIf="linkedin.id !== null">
+    <p>{{mensaje}}</p>
+    <button (click)="postJob()">Share Post</button>
+  </div>
 </div>
