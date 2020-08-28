@@ -13,20 +13,29 @@ export class LoginComponent implements OnInit {
 
   linkedin: Linkedin;
   message: string;
+  show = false;
 
   constructor(private linkedinService: LinkedinService, private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      if (!_.isEmpty(params)) {
-        this.getAuth(params.code);
-      }
-    });
-
-    if (!_.isEmpty(this.linkedin)) {
-      this.loadLinkedin();
+    if (!this.show) {
+      this.route.queryParams.subscribe(params => {
+        if (!_.isEmpty(params)) {
+          this.getAuth(params.code);
+        }
+      });
     }
+
+    this.linkedin = {
+      userId: null,
+      id: null,
+      authCode: '',
+      authToken: '',
+      linkedinID: '',
+    };
+
+    this.loadLinkedin();
 
   }
 
@@ -36,7 +45,8 @@ export class LoginComponent implements OnInit {
 
   getAuth(code: string): void {
     this.linkedinService.getAuth(1, code).subscribe((data) => {
-      this.message = data;
+      this.message = data.msj;
+      this.show = data.show;
     });
   }
 
@@ -52,13 +62,17 @@ export class LoginComponent implements OnInit {
 
   private getInfoAccess(): void {
     this.linkedinService.getInfoLinkedin(1).subscribe(data => {
+
       if (!_.isEmpty(data.linkedin)) {
         this.linkedin.id = data.linkedin.id;
         this.linkedin.userId = data.linkedin.user_id;
         this.linkedin.authCode = data.linkedin.auth_code;
         this.linkedin.authToken = data.linkedin.auth_token;
         this.linkedin.linkedinID = data.linkedin.linkedin_id;
+        this.show = true;
       }
+
+
     });
   }
 

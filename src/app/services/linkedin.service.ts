@@ -24,7 +24,7 @@ export class LinkedinService {
 
   getAuth(userId: number, code: string): Observable<any> {
     return this.http.post(environment.api_linkedin + 'auth/', {userId, code}).pipe(
-      retry(1),
+      retry(0),
       catchError(this.handleError)
     );
   }
