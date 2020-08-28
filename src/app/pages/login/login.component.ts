@@ -12,7 +12,7 @@ import {Linkedin} from '../../models/linkedin';
 export class LoginComponent implements OnInit {
 
   linkedin: Linkedin;
-  message: '';
+  message: string;
 
   constructor(private linkedinService: LinkedinService, private route: ActivatedRoute) {
   }
@@ -21,17 +21,13 @@ export class LoginComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (!_.isEmpty(params)) {
         this.getAuth(params.code);
-      } else {
-        this.linkedin = {
-          userId: null,
-          id: null,
-          authCode: '',
-          authToken: '',
-          linkedinID: '',
-        };
-        this.getInfoAccess();
       }
     });
+
+    if (!_.isEmpty(this.linkedin)) {
+      this.loadLinkedin();
+    }
+
   }
 
   getUrlCode(): string {
@@ -40,24 +36,34 @@ export class LoginComponent implements OnInit {
 
   getAuth(code: string): void {
     this.linkedinService.getAuth(1, code).subscribe((data) => {
-      this.linkedin.authToken = data.linkedin.auth_token;
-    });
-  }
-
-  postJob(): void {
-    this.linkedinService.sharePost(this.linkedin).subscribe((data) => {
       this.message = data;
     });
   }
 
+  postJob(): void {
+    if (!_.isEmpty(this.linkedin)) {
+      this.linkedinService.sharePost(this.linkedin).subscribe((data) => {
+        this.message = data;
+      });
+    } else {
+      this.message = 'Debe autenticarse';
+    }
+  }
+
   private getInfoAccess(): void {
     this.linkedinService.getInfoLinkedin(1).subscribe(data => {
-      this.linkedin.id = data.linkedin.id;
-      this.linkedin.userId = data.linkedin.user_id;
-      this.linkedin.authCode = data.linkedin.auth_code;
-      this.linkedin.authToken = data.linkedin.auth_token;
-      this.linkedin.linkedinID = data.linkedin.linkedin_id;
+      if (!_.isEmpty(data.linkedin)) {
+        this.linkedin.id = data.linkedin.id;
+        this.linkedin.userId = data.linkedin.user_id;
+        this.linkedin.authCode = data.linkedin.auth_code;
+        this.linkedin.authToken = data.linkedin.auth_token;
+        this.linkedin.linkedinID = data.linkedin.linkedin_id;
+      }
     });
+  }
+
+  private loadLinkedin(): void {
+    this.getInfoAccess();
   }
 
 }

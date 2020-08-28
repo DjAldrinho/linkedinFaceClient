@@ -1,8 +1,8 @@
 <h2>Linkedin</h2>
 <div>
-  <a [href]="getUrlCode()" *ngIf="linkedin.id === null">Login Linkedin</a>
-  <div *ngIf="linkedin.id !== null">
-    <p>{{message}}</p>
+  <a [href]="getUrlCode()" *ngIf="!linkedin.authToken">Login Linkedin</a>
+  <div *ngIf="linkedin.authToken">
     <button (click)="postJob()">Share Post</button>
   </div>
+  <p>{{message}}</p>
 </div>
