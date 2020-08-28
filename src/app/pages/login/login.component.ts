@@ -12,7 +12,7 @@ import {Linkedin} from '../../models/linkedin';
 export class LoginComponent implements OnInit {
 
   linkedin: Linkedin;
-  msg: '';
+  message: '';
 
   constructor(private linkedinService: LinkedinService, private route: ActivatedRoute) {
   }
@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
 
   postJob(): void {
     this.linkedinService.sharePost(this.linkedin).subscribe((data) => {
-      this.msg = data;
+      this.message = data;
     });
   }
 
